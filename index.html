@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape from Netherfield - A Jane Austen Escape Room</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;--navy2:#152336;--gold:#c9a84c;--gold-dk:#8b6914;
+  --cream:#f4ede0;--cream2:#ede3d0;--brown:#2c1a08;--brown2:#5a3a18;
+  --green:#1a4a2e;--red-dk:#721c24;
+}
+body{
+  background:var(--navy);
+  font-family:'Lora',Georgia,serif;
+  color:var(--cream);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:24px 16px 48px;
+}
+.progress-bar{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.progress-dot{
+  width:11px;height:11px;border-radius:50%;
+  border:2px solid var(--gold);background:transparent;
+  transition:background .4s,transform .3s;
+}
+.progress-dot.done{background:var(--gold);transform:scale(1.1)}
+.progress-label{font-size:.7rem;letter-spacing:2px;color:var(--gold);opacity:.7;margin:0 4px}
+.chamber{
+  background:linear-gradient(160deg,#f5eee1 0%,#ede0c8 100%);
+  color:var(--brown);border-radius:4px;border:2px solid var(--gold);
+  max-width:680px;width:100%;padding:36px 40px;position:relative;
+  box-shadow:0 0 80px rgba(201,168,76,.12),inset 0 0 40px rgba(0,0,0,.04);
+  animation:fadeIn .35s ease-out;
+  overflow:hidden;
+}
+.chamber::before,.chamber::after{
+  content:'';position:absolute;width:18px;height:18px;border:1.5px solid var(--gold-dk);z-index:1;
+}
+.chamber::before{top:8px;left:8px;border-right:none;border-bottom:none}
+.chamber::after{bottom:8px;right:8px;border-left:none;border-top:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes unlockPop{0%{transform:scale(1)}50%{transform:scale(1.4) rotate(-15deg)}100%{transform:scale(1)}}
+.unlocking{animation:unlockPop .5s ease-out}
+
+#lock-overlay{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  z-index:50;cursor:not-allowed;background:transparent;display:none;
+}
+.timer-banner{
+  background:var(--navy);border-bottom:2px solid var(--gold);
+  padding:10px 18px;display:flex;align-items:center;justify-content:space-between;
+  gap:14px;margin:-36px -40px 24px -40px;position:relative;z-index:2;
+  transition:background .5s;
+}
+.timer-text{font-size:.78rem;letter-spacing:1px;color:var(--gold);font-style:italic;flex:1}
+.timer-track{width:110px;height:5px;background:rgba(201,168,76,.18);border-radius:3px;overflow:hidden;flex-shrink:0}
+.timer-fill{height:100%;background:var(--gold);border-radius:3px;transition:width 1s linear}
+.timer-count-wrap{display:flex;align-items:baseline;gap:4px;flex-shrink:0}
+.timer-count{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);min-width:28px;text-align:right}
+.timer-unit{font-size:.7rem;color:rgba(201,168,76,.65);letter-spacing:1px}
+
+#toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);border:1.5px solid var(--gold);
+  color:var(--gold);border-radius:3px;padding:13px 24px;
+  font-family:'Lora',serif;font-size:.85rem;font-style:italic;
+  z-index:999;transition:transform .28s ease,opacity .28s ease;
+  opacity:0;pointer-events:none;white-space:nowrap;text-align:center;
+  box-shadow:0 4px 24px rgba(0,0,0,.45);
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+h1{font-family:'Playfair Display',serif;font-size:2rem;color:var(--navy);text-align:center;line-height:1.25}
+h2{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--navy);margin-bottom:6px}
+h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--brown2)}
+.chapter-label{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dk);text-align:center;margin-bottom:6px}
+.divider{width:70px;height:1px;background:var(--gold-dk);margin:14px auto}
+.ornament{color:var(--gold-dk);text-align:center;font-size:1rem;letter-spacing:6px;margin:8px 0}
+.lock-icon{font-size:1.8rem;text-align:center;margin-bottom:6px;transition:all .4s}
+.flavor{font-size:.82rem;color:var(--brown2);margin-bottom:18px;font-style:italic;line-height:1.6}
+.fact-card{
+  background:rgba(255,255,255,.55);border-left:3px solid var(--gold-dk);
+  padding:11px 15px;margin-bottom:11px;border-radius:0 3px 3px 0;
+}
+.fact-card .fact-label{font-size:.67rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dk);margin-bottom:3px}
+.fact-card p{font-size:.875rem;line-height:1.65;color:var(--brown)}
+.quiz-section{margin-top:26px;border-top:1px solid var(--gold-dk);padding-top:22px}
+.quiz-q{margin-bottom:18px}
+.quiz-q p{font-size:.9rem;font-weight:600;margin-bottom:9px;color:var(--navy)}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.quiz-opt{
+  background:white;border:1.5px solid #c8b89a;border-radius:3px;
+  padding:9px 13px;font-size:.82rem;font-family:'Lora',serif;
+  cursor:pointer;transition:all .2s;text-align:left;color:var(--brown);
+}
+.quiz-opt:hover:not(:disabled){background:#fff8ef;border-color:var(--gold-dk)}
+.quiz-opt.correct{background:#d4edda;border-color:#2d6a4f;color:#1a3d2b}
+.quiz-opt.incorrect{background:#f8d7da;border-color:var(--red-dk);color:#491217}
+.quiz-opt:disabled{cursor:default}
+.tf-row{
+  background:white;border:1.5px solid #c8b89a;border-radius:3px;
+  padding:12px 14px;margin-bottom:10px;display:flex;
+  justify-content:space-between;align-items:center;gap:10px;
+}
+.tf-row p{font-size:.875rem;color:var(--brown);flex:1;line-height:1.55}
+.tf-btns{display:flex;gap:7px;flex-shrink:0}
+.tf-btn{
+  padding:6px 13px;border:1.5px solid #c8b89a;border-radius:3px;
+  font-family:'Lora',serif;font-size:.8rem;cursor:pointer;
+  background:white;color:var(--brown);transition:all .2s;
+}
+.tf-btn:hover:not(:disabled){background:#fff8ef;border-color:var(--gold-dk)}
+.tf-btn.correct{background:#d4edda;border-color:#2d6a4f;color:#1a3d2b}
+.tf-btn.incorrect{background:#f8d7da;border-color:var(--red-dk);color:#491217}
+.tf-btn:disabled{cursor:default}
+.char-card{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+.portrait{
+  width:76px;height:96px;border:2px solid var(--gold-dk);
+  background:var(--navy2);flex-shrink:0;display:flex;
+  align-items:center;justify-content:center;border-radius:2px;
+}
+.portrait span{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)}
+.char-meta{font-size:.75rem;color:var(--brown2);margin-bottom:7px}
+.char-desc{font-size:.875rem;line-height:1.7;color:var(--brown)}
+.traits-grid{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.trait-btn{
+  padding:9px 17px;border:1.5px solid #c8b89a;border-radius:20px;
+  font-family:'Lora',serif;font-size:.83rem;cursor:pointer;
+  background:white;color:var(--brown);transition:all .2s;
+}
+.trait-btn:hover{border-color:var(--gold-dk);background:#fff8ef}
+.trait-btn.selected{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.trait-btn.correct-r{background:#d4edda;border-color:#2d6a4f;color:#1a3d2b}
+.trait-btn.wrong-r{background:#f8d7da;border-color:var(--red-dk);color:#491217}
+.unscramble-box{
+  text-align:center;padding:20px;background:white;
+  border:1.5px solid #c8b89a;border-radius:3px;margin:14px 0;
+}
+.scramble-word{
+  font-family:'Playfair Display',serif;font-size:1.9rem;
+  letter-spacing:9px;color:var(--navy);margin-bottom:14px;
+}
+.unscramble-input{
+  font-family:'Lora',serif;font-size:1.05rem;padding:9px 18px;
+  border:2px solid #c8b89a;border-radius:3px;text-align:center;
+  text-transform:uppercase;letter-spacing:4px;color:var(--brown);width:215px;
+}
+.unscramble-input:focus{outline:none;border-color:var(--gold-dk)}
+.btn-primary{
+  background:var(--navy);color:var(--gold);border:2px solid var(--gold);
+  padding:13px 30px;font-family:'Playfair Display',serif;font-size:.95rem;
+  letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .2s;
+  display:block;margin:22px auto 0;
+}
+.btn-primary:hover{background:var(--gold);color:var(--navy)}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed}
+.btn-inline{display:inline-block;margin:12px auto 0}
+.feedback{text-align:center;font-size:.85rem;min-height:22px;margin-top:11px;font-style:italic}
+.feedback.good{color:#2d6a4f}
+.feedback.bad{color:var(--red-dk)}
+.prog-note{font-size:.78rem;color:var(--brown2);text-align:center;margin-top:6px}
+.hidden{display:none!important}
+.title-intro{font-size:.88rem;line-height:1.85;max-width:460px;margin:14px auto 22px;color:var(--brown2);font-style:italic;text-align:center}
+.score-badge{
+  background:var(--navy);color:var(--gold);border:2px solid var(--gold);
+  border-radius:3px;padding:18px;margin:18px 0;text-align:center;
+}
+.score-num{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold)}
+.score-grade{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:rgba(201,168,76,.8)}
+.recap-item{display:flex;gap:9px;margin-bottom:9px;font-size:.875rem;color:var(--brown);line-height:1.6}
+.recap-check{color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+.opening-quote{
+  background:#f0e8d8;border:1px solid #c8a86a;border-radius:3px;
+  padding:15px 18px;margin:18px 0;text-align:left;
+}
+.opening-quote blockquote{font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;color:var(--navy);line-height:1.7}
+.opening-quote cite{font-size:.75rem;color:var(--brown2);display:block;margin-top:6px}
+.extra-credit-banner{
+  background:#fff8e6;border:2px dashed var(--gold-dk);border-radius:3px;
+  padding:14px 18px;margin:18px 0;text-align:center;
+}
+.extra-credit-banner p{font-size:.88rem;color:var(--brown);line-height:1.65}
+.extra-credit-banner strong{color:var(--gold-dk)}
+.victory-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px}
+.btn-victory{
+  background:var(--navy);color:var(--gold);border:2px solid var(--gold);
+  padding:11px 22px;font-family:'Playfair Display',serif;font-size:.88rem;
+  letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .2s;
+}
+.btn-victory:hover{background:var(--gold);color:var(--navy)}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress-bar">
+  <span class="progress-label">Chambers</span>
+  <div class="progress-dot" id="dot-0"></div>
+  <div class="progress-dot" id="dot-1"></div>
+  <div class="progress-dot" id="dot-2"></div>
+  <div class="progress-dot" id="dot-3"></div>
+  <div class="progress-dot" id="dot-4"></div>
+</div>
+
+<div class="chamber" id="chamber">
+  <div id="lock-overlay" onclick="showToast()"></div>
+</div>
+<div id="toast">Please read the material carefully before answering!</div>
+
+<script>
+const S = { room:0, score:0, total:0 };
+const ROOMS = [titleScreen, room1, room2, room3, room4, room5, victory];
+let _timerID = null;
+
+function go(n) {
+  if (n !== undefined) S.room = n;
+  const chamber = document.getElementById('chamber');
+  chamber.style.opacity = 0;
+  chamber.style.transition = 'opacity .2s';
+  if (_timerID) { clearInterval(_timerID); _timerID = null; }
+  setTimeout(() => {
+    ROOMS[S.room]();
+    // Re-attach overlay after render
+    const existing = document.getElementById('lock-overlay');
+    if (!existing) {
+      const ov = document.createElement('div');
+      ov.id = 'lock-overlay'; ov.onclick = showToast;
+      chamber.appendChild(ov);
+    }
+    chamber.style.opacity = 1;
+    for (let i = 0; i < 5; i++) {
+      document.getElementById('dot-'+i).classList.toggle('done', S.room > i+1);
+    }
+    if (S.room >= 1 && S.room <= 5) startTimer(60);
+  }, 220);
+}
+
+function next() { S.room++; go(); }
+function el(id) { return document.getElementById(id); }
+
+function setFB(id, msg, type) {
+  const f = el(id); f.innerHTML = msg; f.className = 'feedback '+type;
+}
+
+function markQ(selector, correctLetter, chosenLetter) {
+  const L = ['a','b','c','d'];
+  document.querySelectorAll(selector).forEach((btn,i) => {
+    btn.disabled = true;
+    if (L[i] === correctLetter) btn.classList.add('correct');
+    else if (L[i] === chosenLetter) btn.classList.add('incorrect');
+  });
+}
+
+/* TIMER */
+function startTimer(seconds) {
+  const ov = el('lock-overlay');
+  if (ov) ov.style.display = 'block';
+  const banner = el('timer-banner');
+  const countEl = el('timer-count');
+  const fillEl = el('timer-fill');
+  if (!banner || !countEl || !fillEl) return;
+
+  let remaining = seconds;
+  countEl.textContent = remaining;
+  fillEl.style.width = '100%';
+
+  _timerID = setInterval(() => {
+    remaining--;
+    countEl.textContent = remaining;
+    fillEl.style.width = Math.max(0,(remaining/seconds*100))+'%';
+    if (remaining <= 0) {
+      clearInterval(_timerID); _timerID = null;
+      if (ov) ov.style.display = 'none';
+      banner.style.background = '#143322';
+      const tt = banner.querySelector('.timer-text');
+      if (tt) tt.textContent = 'You may now answer the questions below.';
+      countEl.textContent = '';
+      const tu = banner.querySelector('.timer-unit');
+      if (tu) tu.textContent = 'Unlocked';
+    }
+  }, 1000);
+}
+
+let _toastTimer = null;
+function showToast() {
+  const t = el('toast');
+  t.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function timerHTML() {
+  return `<div id="timer-banner" class="timer-banner">
+    <span class="timer-text">Read all material carefully before answering.</span>
+    <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+    <div class="timer-count-wrap">
+      <span class="timer-count" id="timer-count">60</span>
+      <span class="timer-unit">sec</span>
+    </div>
+  </div>`;
+}
+
+/* TITLE */
+function titleScreen() {
+  el('chamber').innerHTML = `
+    <div style="text-align:center">
+      <div class="chapter-label">&#10022; An Interactive Escape Room &#10022;</div>
+      <h1>Escape from<br>Netherfield</h1>
+      <div class="ornament">- &#10022; -</div>
+      <p class="title-intro">
+        You have received an invitation to Netherfield Park for the season's grandest ball.
+        Upon arrival, the great doors have been sealed by a riddle.<br><br>
+        To escape, you must prove your knowledge of Regency England,
+        the brilliant Jane Austen, and three very particular guests
+        expected this very evening.
+      </p>
+      <div style="display:flex;gap:18px;justify-content:center;margin-bottom:22px;
+                  font-size:.72rem;letter-spacing:2px;color:var(--gold-dk);text-transform:uppercase;flex-wrap:wrap">
+        <span>5 Chambers</span><span>|</span><span>Regency Era</span>
+        <span>|</span><span>Jane Austen</span><span>|</span><span>3 Characters</span>
+      </div>
+      <button class="btn-primary" onclick="next()">Enter Netherfield &rarr;</button>
+    </div>`;
+}
+
+/* ROOM 1 */
+function room1() {
+  el('chamber').innerHTML = timerHTML() + `
+    <div class="chapter-label">Chamber I of V - The Library</div>
+    <div class="lock-icon" id="lock1">&#128274;</div>
+    <h1>The Library</h1>
+    <div class="divider"></div>
+    <h2>Regency England</h2>
+    <p class="flavor">The shelves hold the answers. Study carefully. This knowledge is your first key.</p>
+
+    <div class="fact-card">
+      <div class="fact-label">The Time Period</div>
+      <p>The <strong>Regency era</strong> (roughly 1811 to 1820) is named for the <strong>Prince Regent,</strong> the future King George IV, who ruled while his father King George III was declared unfit due to mental illness.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Women and Financial Security</div>
+      <p>Women had almost no legal independence. Once married, everything they owned, including money, property, and even clothing, legally belonged to their husband. For most women, a good marriage was not romantic. It was <em>survival.</em></p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Entailment and Inheritance</div>
+      <p>Many estates were <strong>"entailed,"</strong> meaning they were legally restricted so that they could only pass to male heirs. Daughters could be completely left out, even if they had lived their whole lives on that land. This concept is central to our story.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Social Class and the Season</div>
+      <p>Society was rigidly divided by class. Each year, wealthy families traveled to London for <strong>"the Season,"</strong> a social calendar of balls, dinners, and visits specifically designed to introduce young women to eligible men of their rank.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Old Money vs. New Money</div>
+      <p>There was a sharp distinction between those with <strong>old, inherited wealth</strong> (tied to land and title) and those who had recently made money through trade or business. The latter was often looked down upon, no matter how wealthy they were.</p>
+    </div>
+
+    <div class="quiz-section">
+      <h3 style="margin-bottom:14px">&#128273; Unlock the Chamber</h3>
+      <div class="quiz-q" id="r1q1">
+        <p>1. In Regency England, what was typically a woman's best path to financial security?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="r1ans(1,'a')">Becoming a teacher</button>
+          <button class="quiz-opt" onclick="r1ans(1,'b')">Making a good marriage</button>
+          <button class="quiz-opt" onclick="r1ans(1,'c')">Inheriting a title</button>
+          <button class="quiz-opt" onclick="r1ans(1,'d')">Starting a business</button>
+        </div>
+      </div>
+      <div class="quiz-q" id="r1q2">
+        <p>2. What does it mean for an estate to be "entailed"?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="r1ans(2,'a')">The house is very large</button>
+          <button class="quiz-opt" onclick="r1ans(2,'b')">It can only pass to a male heir</button>
+          <button class="quiz-opt" onclick="r1ans(2,'c')">It must be sold upon the owner's death</button>
+          <button class="quiz-opt" onclick="r1ans(2,'d')">It belongs to the Crown</button>
+        </div>
+      </div>
+      <div class="quiz-q" id="r1q3">
+        <p>3. The "Regency era" is named after whom?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="r1ans(3,'a')">Queen Victoria</button>
+          <button class="quiz-opt" onclick="r1ans(3,'b')">King George III</button>
+          <button class="quiz-opt" onclick="r1ans(3,'c')">The Prince Regent, future George IV</button>
+          <button class="quiz-opt" onclick="r1ans(3,'d')">Napoleon Bonaparte</button>
+        </div>
+      </div>
+      <div class="feedback" id="fb1"></div>
+      <div class="prog-note">Correct: <span id="r1c">0</span> / 3</div>
+      <button class="btn-primary hidden" id="next1" onclick="next()">Proceed to Chamber II &rarr;</button>
+    </div>`;
+  window._r1 = {a:{1:'b',2:'b',3:'c'},done:0,correct:0};
+}
+
+function r1ans(q,chosen) {
+  markQ('#r1q'+q+' .quiz-opt', window._r1.a[q], chosen);
+  window._r1.done++;
+  if (chosen===window._r1.a[q]){window._r1.correct++;S.score++;}
+  S.total++;
+  el('r1c').textContent=window._r1.correct;
+  if (window._r1.done===3) {
+    const ok=window._r1.correct===3;
+    setFB('fb1',ok?'Excellent! The library door creaks open.':window._r1.correct+'/3 correct. The door opens. Review what you missed!',ok?'good':'bad');
+    el('lock1').textContent='🔓';el('lock1').classList.add('unlocking');
+    el('next1').classList.remove('hidden');
+  }
+}
+
+/* ROOM 2 */
+function room2() {
+  el('chamber').innerHTML = timerHTML() + `
+    <div class="chapter-label">Chamber II of V - Jane's Study</div>
+    <div class="lock-icon" id="lock2">&#128274;</div>
+    <h1>Jane's Study</h1>
+    <div class="divider"></div>
+    <h2>Meet Jane Austen</h2>
+    <p class="flavor">A writing desk sits in the corner. Letters and manuscripts are scattered across the floor.</p>
+
+    <div class="char-card">
+      <div class="portrait"><span>JA</span></div>
+      <div>
+        <h2>Jane Austen</h2>
+        <p class="char-meta">1775 to 1817 &nbsp;|&nbsp; Author &nbsp;|&nbsp; Hampshire, England</p>
+        <p class="char-desc">One of England's greatest novelists, Austen wrote sharp, witty stories about the world she knew: Regency society, marriage, and the quiet heroism of ordinary women.</p>
+      </div>
+    </div>
+
+    <div class="fact-card">
+      <div class="fact-label">Family and Early Life</div>
+      <p>Born December 16, 1775 in Steventon, Hampshire. She was one of <strong>8 children</strong> and was especially close to her sister Cassandra, with whom she exchanged hundreds of letters throughout her life.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">A Publishing Secret</div>
+      <p>Austen published all her novels <strong>anonymously.</strong> Her books simply read "By a Lady." Women writers were not taken as seriously as men, and anonymity protected her from criticism and social embarrassment.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">The Original Title</div>
+      <p><em>Pride and Prejudice</em> was first written in 1796 under the title <strong>"First Impressions,"</strong> a name that makes a great deal of sense once you have read the novel.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">A Short Life, A Lasting Legacy</div>
+      <p>Austen died in 1817 at just <strong>41 years old,</strong> leaving two novels unfinished. During her lifetime she was moderately well known. Today she is considered one of the greatest English writers who ever lived.</p>
+    </div>
+
+    <div class="quiz-section">
+      <h3 style="margin-bottom:8px">&#128273; True or False?</h3>
+      <p class="flavor" style="margin-bottom:14px">Click TRUE or FALSE for each statement about Jane Austen.</p>
+      <div class="tf-row" id="tf1">
+        <p>Jane Austen published her novels under her real name.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(1,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(1,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf2">
+        <p>Pride and Prejudice was originally titled "First Impressions."</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(2,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(2,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf3">
+        <p>Jane Austen had only two siblings.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(3,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(3,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf4">
+        <p>Austen died relatively young, in her early forties.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(4,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(4,false)">False</button>
+        </div>
+      </div>
+      <div class="feedback" id="fb2"></div>
+      <div class="prog-note">Correct: <span id="r2c">0</span> / 4</div>
+      <button class="btn-primary hidden" id="next2" onclick="next()">Proceed to Chamber III &rarr;</button>
+    </div>`;
+  window._r2 = {a:{1:false,2:true,3:false,4:true},done:0,correct:0};
+}
+
+function r2tf(q,chosen) {
+  const correct=window._r2.a[q];
+  document.querySelectorAll('#tf'+q+' .tf-btn').forEach(btn => {
+    btn.disabled=true;
+    const isT=btn.textContent==='True';
+    if ((isT&&correct===true)||(!isT&&correct===false)) btn.classList.add('correct');
+    else if ((isT&&chosen===true&&!correct)||(!isT&&chosen===false&&correct)) btn.classList.add('incorrect');
+  });
+  window._r2.done++;
+  if (chosen===correct){window._r2.correct++;S.score++;}
+  S.total++;
+  el('r2c').textContent=window._r2.correct;
+  if (window._r2.done===4) {
+    const ok=window._r2.correct>=3;
+    setFB('fb2',ok?'Well done! The study door swings open.':window._r2.correct+'/4 correct. The door opens. Review the answers before moving on.',ok?'good':'bad');
+    el('lock2').textContent='🔓';el('lock2').classList.add('unlocking');
+    el('next2').classList.remove('hidden');
+  }
+}
+
+/* ROOM 3 */
+function room3() {
+  el('chamber').innerHTML = timerHTML() + `
+    <div class="chapter-label">Chamber III of V - The Drawing Room</div>
+    <div class="lock-icon" id="lock3">&#128274;</div>
+    <h1>The Drawing Room</h1>
+    <div class="divider"></div>
+    <h2>Meet: Miss Elizabeth Bennet</h2>
+    <p class="flavor">A portrait hangs above the fireplace. Who is this woman, and what makes her so unusual?</p>
+
+    <div class="char-card">
+      <div class="portrait" style="background:#1a2e4a"><span>EB</span></div>
+      <div>
+        <h2>Elizabeth "Lizzy" Bennet</h2>
+        <p class="char-meta">Second daughter of Mr. and Mrs. Bennet &nbsp;|&nbsp; Longbourn Estate</p>
+        <p class="char-desc">One of five sisters, Elizabeth is the kind of woman Regency society was not quite sure what to do with. She refuses to follow the rules, politely, brilliantly, and with a smile.</p>
+      </div>
+    </div>
+
+    <div class="fact-card">
+      <div class="fact-label">Her Sharpest Weapon</div>
+      <p>Elizabeth is famous for her <strong>wit.</strong> She notices things others miss, sees through pretension instantly, and says what she thinks, even when it is decidedly <em>not</em> what polite society wants to hear.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">What She Values</div>
+      <p>Unlike most women of her time, Elizabeth judges people by their <strong>character,</strong> not their wealth or social rank. She refuses to marry simply for money, which is a bold and radical position in Regency England.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Her World and Her People</div>
+      <p>She loves to read, walk the countryside, and have <em>real</em> conversations. Her family nickname is <strong>"Lizzy."</strong> Her closest companion is her eldest sister Jane, whom she adores.</p>
+    </div>
+
+    <div class="quiz-section">
+      <h3 style="margin-bottom:6px">&#128273; Uncover Lizzy's Character</h3>
+      <p class="flavor" style="margin-bottom:12px">Select the <strong>4 words</strong> that best describe Elizabeth Bennet. Choose carefully.</p>
+      <div class="traits-grid">
+        <button class="trait-btn" data-trait="witty" onclick="toggleTrait(this)">Witty</button>
+        <button class="trait-btn" data-trait="wealthy" onclick="toggleTrait(this)">Wealthy</button>
+        <button class="trait-btn" data-trait="independent" onclick="toggleTrait(this)">Independent</button>
+        <button class="trait-btn" data-trait="obedient" onclick="toggleTrait(this)">Obedient</button>
+        <button class="trait-btn" data-trait="observant" onclick="toggleTrait(this)">Observant</button>
+        <button class="trait-btn" data-trait="vain" onclick="toggleTrait(this)">Vain</button>
+        <button class="trait-btn" data-trait="clever" onclick="toggleTrait(this)">Clever</button>
+        <button class="trait-btn" data-trait="snobbish" onclick="toggleTrait(this)">Snobbish</button>
+      </div>
+      <p style="font-size:.78rem;text-align:center;color:var(--brown2)">Selected: <span id="tcount">0</span> / 4</p>
+      <button class="btn-primary btn-inline" id="check-traits" onclick="checkTraits()">Check My Answer</button>
+      <div class="feedback" id="fb3"></div>
+      <button class="btn-primary hidden" id="next3" onclick="next()">Proceed to Chamber IV &rarr;</button>
+    </div>`;
+  window._r3 = {correct:new Set(['witty','independent','observant','clever']),selected:new Set()};
+}
+
+function toggleTrait(btn) {
+  if (btn.disabled) return;
+  const t=btn.dataset.trait;
+  if (window._r3.selected.has(t)){window._r3.selected.delete(t);btn.classList.remove('selected');}
+  else {
+    if (window._r3.selected.size>=4) return;
+    window._r3.selected.add(t);btn.classList.add('selected');
+  }
+  el('tcount').textContent=window._r3.selected.size;
+}
+
+function checkTraits() {
+  if (window._r3.selected.size<4){setFB('fb3','Please select exactly 4 traits first.','bad');return;}
+  let numRight=0;
+  document.querySelectorAll('.trait-btn').forEach(btn => {
+    btn.disabled=true;btn.classList.remove('selected');
+    const t=btn.dataset.trait;
+    if (window._r3.correct.has(t)){btn.classList.add('correct-r');if(window._r3.selected.has(t))numRight++;}
+    else if (window._r3.selected.has(t)) btn.classList.add('wrong-r');
+  });
+  el('check-traits').disabled=true;
+  const ok=numRight===4;
+  if(ok)S.score++;S.total++;
+  setFB('fb3',ok?'Perfect! You understand Miss Bennet well. The door unlocks.':numRight+'/4 correct. The correct words are highlighted in green. The door opens!',ok?'good':'bad');
+  el('lock3').textContent='🔓';el('lock3').classList.add('unlocking');
+  el('next3').classList.remove('hidden');
+}
+
+/* ROOM 4 */
+function room4() {
+  el('chamber').innerHTML = timerHTML() + `
+    <div class="chapter-label">Chamber IV of V - The Garden</div>
+    <div class="lock-icon" id="lock4">&#128274;</div>
+    <h1>The Garden Path</h1>
+    <div class="divider"></div>
+    <h2>Meet: Mr. Fitzwilliam Darcy</h2>
+    <p class="flavor">A figure stands alone by the fountain. He does not turn to greet you.</p>
+
+    <div class="char-card">
+      <div class="portrait" style="background:#1c1a2e"><span>FD</span></div>
+      <div>
+        <h2>Mr. Fitzwilliam Darcy</h2>
+        <p class="char-meta">Master of Pemberley &nbsp;|&nbsp; Derbyshire &nbsp;|&nbsp; &pound;10,000 a year</p>
+        <p class="char-desc">One of the wealthiest unmarried men in all of England, and possibly the most difficult to know.</p>
+      </div>
+    </div>
+
+    <div class="fact-card">
+      <div class="fact-label">His Reputation</div>
+      <p>Darcy is known throughout society as <strong>proud and reserved.</strong> He rarely smiles in company, seldom dances at balls, and seems to look down on anyone below his social standing. First impressions of him are complicated.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">His Estate</div>
+      <p>He is the master of <strong>Pemberley,</strong> a grand, magnificent estate in Derbyshire. To own Pemberley is to be among the most powerful landowners in England. The estate is both his home and his identity.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Beneath the Surface</div>
+      <p>Beneath the cold exterior, Darcy is fiercely <strong>loyal to those he loves.</strong> He is deeply protective of his younger sister Georgiana and is quietly capable of great generosity, though he rarely shows it in a crowded room.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">A Hint About the Title</div>
+      <p>Remember the original title, "First Impressions"? Darcy is a perfect example of why first impressions can be dangerously misleading. That is all we will say for now.</p>
+    </div>
+
+    <div class="quiz-section">
+      <h3 style="margin-bottom:6px">&#128273; Name His Estate</h3>
+      <p class="flavor" style="margin-bottom:12px">The garden gate is locked with a name. Unscramble the letters below to reveal Mr. Darcy's grand Derbyshire estate.</p>
+      <div class="unscramble-box">
+        <div class="scramble-word">B &nbsp; E &nbsp; L &nbsp; E &nbsp; M &nbsp; Y &nbsp; P &nbsp; E &nbsp; R</div>
+        <p style="font-size:.78rem;color:var(--brown2);margin-bottom:13px">9 letters &nbsp;|&nbsp; Mr. Darcy's home</p>
+        <input class="unscramble-input" id="u-input" type="text" placeholder="_ _ _ _ _ _ _ _ _"
+               maxlength="9" oninput="this.value=this.value.toUpperCase()"
+               onkeydown="if(event.key==='Enter')checkUnscramble()"/>
+        <br>
+        <button class="btn-primary btn-inline" onclick="checkUnscramble()" style="display:inline-block">Submit Answer</button>
+      </div>
+      <div class="feedback" id="fb4"></div>
+      <button class="btn-primary hidden" id="next4" onclick="next()">Proceed to Chamber V &rarr;</button>
+    </div>`;
+  window._r4 = {attempts:0};
+}
+
+function checkUnscramble() {
+  const val=el('u-input').value.trim().toUpperCase();
+  window._r4.attempts++;
+  if (val==='PEMBERLEY') {
+    S.score++;S.total++;
+    setFB('fb4','Correct! Pemberley, the grandest estate in Derbyshire. The garden gate swings open.','good');
+    el('lock4').textContent='🔓';el('lock4').classList.add('unlocking');
+    el('u-input').disabled=true;el('next4').classList.remove('hidden');
+  } else if (window._r4.attempts>=3) {
+    S.total++;
+    setFB('fb4','The answer is PEMBERLEY. The gate opens anyway. Remember that name!','bad');
+    el('lock4').textContent='🔓';el('u-input').disabled=true;el('next4').classList.remove('hidden');
+  } else {
+    const hints=['','Hint: it starts with P.','Hint: P _ M B _ R _ _ Y'];
+    setFB('fb4','Not quite. '+hints[window._r4.attempts],'bad');
+  }
+}
+
+/* ROOM 5 */
+function room5() {
+  el('chamber').innerHTML = timerHTML() + `
+    <div class="chapter-label">Chamber V of V - The Grand Ballroom - Final Chamber</div>
+    <div class="lock-icon" id="lock5">&#128274;</div>
+    <h1>The Grand Ballroom</h1>
+    <div class="divider"></div>
+    <h2>Meet: Mr. Charles Bingley</h2>
+    <p class="flavor">The last door stands before you. Beyond it is freedom. But first, one final guest.</p>
+
+    <div class="char-card">
+      <div class="portrait" style="background:#1a2e1c"><span>CB</span></div>
+      <div>
+        <h2>Mr. Charles Bingley</h2>
+        <p class="char-meta">New tenant of Netherfield Park &nbsp;|&nbsp; Best friend to Mr. Darcy</p>
+        <p class="char-desc">If Mr. Darcy is the storm, Mr. Bingley is the sunshine. He is everything his best friend is not, at least on the surface.</p>
+      </div>
+    </div>
+
+    <div class="fact-card">
+      <div class="fact-label">His Personality</div>
+      <p>Bingley is <strong>cheerful, warm, and immediately likeable.</strong> He enters a room and makes everyone feel welcome. He dances every dance at every ball, the social opposite of Darcy.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">New Money</div>
+      <p>Unlike Darcy's old, inherited wealth, Bingley's fortune comes from <strong>trade and business,</strong> which is called "new money." In Regency society, how you got your wealth was nearly as important as having it.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">His Arrival at Netherfield</div>
+      <p>He has just taken the lease on <strong>Netherfield Park,</strong> the very house you are standing in right now. His arrival as a wealthy, cheerful, single man sets the entire story into motion.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">His Company</div>
+      <p>Bingley travels with his two sisters and his best friend, Mr. Darcy. Together they will attend the local balls and quietly change several lives in the process.</p>
+    </div>
+
+    <div class="quiz-section">
+      <h3 style="margin-bottom:10px">&#128273; Final Challenge - Escape the Estate!</h3>
+      <p class="flavor" style="margin-bottom:14px">Three questions draw on everything you have learned tonight. Answer well to unlock the great doors of Netherfield.</p>
+      <div class="quiz-q" id="fq1">
+        <p>1. What is the name of Mr. Darcy's estate?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="finalQ(1,'a')">Longbourn</button>
+          <button class="quiz-opt" onclick="finalQ(1,'b')">Netherfield Park</button>
+          <button class="quiz-opt" onclick="finalQ(1,'c')">Pemberley</button>
+          <button class="quiz-opt" onclick="finalQ(1,'d')">Rosings Park</button>
+        </div>
+      </div>
+      <div class="quiz-q" id="fq2">
+        <p>2. What was "Pride and Prejudice" originally titled when Austen first wrote it?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="finalQ(2,'a')">Second Chances</button>
+          <button class="quiz-opt" onclick="finalQ(2,'b')">First Impressions</button>
+          <button class="quiz-opt" onclick="finalQ(2,'c')">Love and Society</button>
+          <button class="quiz-opt" onclick="finalQ(2,'d')">The Marriage Plot</button>
+        </div>
+      </div>
+      <div class="quiz-q" id="fq3">
+        <p>3. Which of the following best describes Elizabeth Bennet?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="finalQ(3,'a')">Wealthy and fashionable</button>
+          <button class="quiz-opt" onclick="finalQ(3,'b')">Obedient and quietly content</button>
+          <button class="quiz-opt" onclick="finalQ(3,'c')">Witty, independent, and clever</button>
+          <button class="quiz-opt" onclick="finalQ(3,'d')">Proud and socially superior</button>
+        </div>
+      </div>
+      <div class="feedback" id="fb5"></div>
+      <div class="prog-note">Correct: <span id="r5c">0</span> / 3</div>
+      <button class="btn-primary hidden" id="next5" onclick="next()">&#127882; Escape Netherfield! &rarr;</button>
+    </div>`;
+  window._r5 = {a:{1:'c',2:'b',3:'c'},done:0,correct:0};
+}
+
+function finalQ(q,chosen) {
+  markQ('#fq'+q+' .quiz-opt',window._r5.a[q],chosen);
+  window._r5.done++;
+  if (chosen===window._r5.a[q]){window._r5.correct++;S.score++;}
+  S.total++;
+  el('r5c').textContent=window._r5.correct;
+  if (window._r5.done===3) {
+    const ok=window._r5.correct===3;
+    setFB('fb5',ok?'&#127881; Perfect score! The great doors of Netherfield swing wide open!':window._r5.correct+'/3 correct. The doors open. Review the answers before we start reading next week!',ok?'good':'bad');
+    el('lock5').textContent='🔓';el('lock5').classList.add('unlocking');
+    el('next5').classList.remove('hidden');
+  }
+}
+
+/* VICTORY */
+function victory() {
+  const pct = S.total>0 ? Math.round((S.score/S.total)*100) : 0;
+  const grade = pct>=90?'With Distinction &#127775;':pct>=70?'With Honours &#10024;':'Escaped - Barely! &#128005;';
+  const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  el('chamber').innerHTML = `
+    <div id="scorecard" style="text-align:center">
+      <div class="chapter-label">&#10022; You Escaped! &#10022;</div>
+      <h1>You Have Escaped<br>Netherfield Park!</h1>
+      <div class="ornament">- &#10022; -</div>
+      <p class="title-intro">The great doors open to the moonlit English countryside. You are free, and considerably wiser for it.</p>
+
+      <div class="score-badge">
+        <p style="font-size:.72rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">Final Score</p>
+        <div class="score-num">${S.score} / ${S.total}</div>
+        <div class="score-grade">${grade}</div>
+        <p style="font-size:.72rem;color:rgba(201,168,76,.6);margin-top:6px">${pct}% correct &nbsp;|&nbsp; ${dateStr}</p>
+      </div>
+
+      <div style="text-align:left;margin:20px 0">
+        <h3 style="margin-bottom:14px;text-align:left">What you have learned:</h3>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Regency England</strong> - when Pride and Prejudice takes place, why marriage was survival, and what "entailment" means for the Bennet family.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Jane Austen</strong> - who she was, why she published as "a Lady," and why this book was almost called First Impressions.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Elizabeth Bennet</strong> - witty, clever, independent, and not easily impressed by wealth or rank.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Mr. Darcy</strong> - master of Pemberley, proud in manner, but a man whose first impression may not tell the whole story.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Mr. Bingley</strong> - warm, cheerful, newly arrived at Netherfield, and about to cause quite a stir in the neighbourhood.</span></div>
+      </div>
+
+      <div class="opening-quote">
+        <p style="font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--brown2);margin-bottom:8px">Next week, the first line of your book:</p>
+        <blockquote>"It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife."</blockquote>
+        <cite>- Jane Austen, Pride and Prejudice (1813)</cite>
+      </div>
+    </div>
+
+    <div class="extra-credit-banner">
+      <p>&#127942; <strong>Extra Credit Opportunity!</strong><br>
+      Save or copy your results and submit them to your teacher for extra credit.
+      Make sure your <strong>name is visible</strong> before you take the screenshot!</p>
+    </div>
+
+    <div class="victory-btns">
+      <button class="btn-victory" onclick="copyResults()">&#128203; Copy Results to Clipboard</button>
+      <button class="btn-victory" onclick="saveScreenshot()">&#128247; Save Screenshot</button>
+    </div>
+    <div class="feedback" id="fb-victory" style="margin:6px 0 16px"></div>
+
+    <button class="btn-primary" onclick="S.room=0;S.score=0;S.total=0;go()">Play Again</button>`;
+
+  for (let i=0;i<5;i++) el('dot-'+i).classList.add('done');
+}
+
+function copyResults() {
+  const pct=S.total>0?Math.round((S.score/S.total)*100):0;
+  const grade=pct>=90?'With Distinction':pct>=70?'With Honours':'Escaped - Barely!';
+  const dateStr=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const text=[
+    '========================================',
+    '  Escape from Netherfield',
+    '  A Jane Austen Pre-Reading Escape Room',
+    '========================================',
+    '',
+    'Name: ________________________________',
+    '',
+    'Final Score : '+S.score+' / '+S.total+' ('+pct+'%)',
+    'Result      : '+grade,
+    'Date        : '+dateStr,
+    '',
+    'Chambers Completed:',
+    '  [x] Chamber I   - Regency England',
+    '  [x] Chamber II  - Jane Austen',
+    '  [x] Chamber III - Elizabeth Bennet',
+    '  [x] Chamber IV  - Mr. Darcy',
+    '  [x] Chamber V   - Mr. Bingley',
+    '',
+    'Pre-reading activity for Pride and Prejudice.',
+    '========================================'
+  ].join('\n');
+
+  navigator.clipboard.writeText(text).then(()=>{
+    setFB('fb-victory','Results copied! Paste into a document, fill in your name, and submit for extra credit.','good');
+  }).catch(()=>{
+    setFB('fb-victory','Could not copy automatically. Please use the screenshot button instead.','bad');
+  });
+}
+
+function saveScreenshot() {
+  setFB('fb-victory','Capturing your scorecard, please wait...','good');
+  const target = el('scorecard');
+  html2canvas(target,{
+    backgroundColor:'#f5eee1',scale:2,useCORS:true,logging:false,
+    ignoreElements: el => el.id==='lock-overlay'
+  }).then(canvas=>{
+    const link=document.createElement('a');
+    link.download='netherfield_escape_room_score.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    setFB('fb-victory','Screenshot saved! Write your name on it and submit for extra credit.','good');
+  }).catch(()=>{
+    setFB('fb-victory','Screenshot failed. Use your device\'s built-in screenshot tool instead (Windows: Win+Shift+S, Mac: Cmd+Shift+4).','bad');
+  });
+}
+
+go();
+</script>
+</body>
+</html>
