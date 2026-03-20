@@ -10,32 +10,27 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --navy:#0d1b2a;--navy2:#152336;--gold:#c9a84c;--gold-dk:#8b6914;
-  --cream:#f4ede0;--cream2:#ede3d0;--brown:#2c1a08;--brown2:#5a3a18;
+  --cream:#f4ede0;--brown:#2c1a08;--brown2:#5a3a18;
   --green:#1a4a2e;--red-dk:#721c24;
 }
 body{
-  background:var(--navy);
-  font-family:'Lora',Georgia,serif;
-  color:var(--cream);
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;
+  background:var(--navy);font-family:'Lora',Georgia,serif;color:var(--cream);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
   padding:24px 16px 48px;
 }
-.progress-bar{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.progress-bar{display:flex;align-items:center;gap:8px;margin-bottom:28px;flex-wrap:wrap;justify-content:center}
 .progress-dot{
-  width:11px;height:11px;border-radius:50%;
-  border:2px solid var(--gold);background:transparent;
-  transition:background .4s,transform .3s;
+  width:11px;height:11px;border-radius:50%;border:2px solid var(--gold);background:transparent;
+  transition:background .4s,transform .3s;flex-shrink:0;
 }
 .progress-dot.done{background:var(--gold);transform:scale(1.1)}
 .progress-label{font-size:.7rem;letter-spacing:2px;color:var(--gold);opacity:.7;margin:0 4px}
 .chamber{
-  background:linear-gradient(160deg,#f5eee1 0%,#ede0c8 100%);
-  color:var(--brown);border-radius:4px;border:2px solid var(--gold);
-  max-width:680px;width:100%;padding:36px 40px;position:relative;
+  background:linear-gradient(160deg,#f5eee1 0%,#ede0c8 100%);color:var(--brown);
+  border-radius:4px;border:2px solid var(--gold);max-width:680px;width:100%;
+  padding:36px 40px;position:relative;
   box-shadow:0 0 80px rgba(201,168,76,.12),inset 0 0 40px rgba(0,0,0,.04);
-  animation:fadeIn .35s ease-out;
-  overflow:hidden;
+  animation:fadeIn .35s ease-out;overflow:hidden;
 }
 .chamber::before,.chamber::after{
   content:'';position:absolute;width:18px;height:18px;border:1.5px solid var(--gold-dk);z-index:1;
@@ -45,16 +40,14 @@ body{
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes unlockPop{0%{transform:scale(1)}50%{transform:scale(1.4) rotate(-15deg)}100%{transform:scale(1)}}
 .unlocking{animation:unlockPop .5s ease-out}
-
 #lock-overlay{
   position:absolute;top:0;left:0;width:100%;height:100%;
   z-index:50;cursor:not-allowed;background:transparent;display:none;
 }
 .timer-banner{
-  background:var(--navy);border-bottom:2px solid var(--gold);
-  padding:10px 18px;display:flex;align-items:center;justify-content:space-between;
-  gap:14px;margin:-36px -40px 24px -40px;position:relative;z-index:2;
-  transition:background .5s;
+  background:var(--navy);border-bottom:2px solid var(--gold);padding:10px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin:-36px -40px 24px -40px;position:relative;z-index:2;transition:background .5s;
 }
 .timer-text{font-size:.78rem;letter-spacing:1px;color:var(--gold);font-style:italic;flex:1}
 .timer-track{width:110px;height:5px;background:rgba(201,168,76,.18);border-radius:3px;overflow:hidden;flex-shrink:0}
@@ -62,18 +55,15 @@ body{
 .timer-count-wrap{display:flex;align-items:baseline;gap:4px;flex-shrink:0}
 .timer-count{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);min-width:28px;text-align:right}
 .timer-unit{font-size:.7rem;color:rgba(201,168,76,.65);letter-spacing:1px}
-
 #toast{
   position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:var(--navy);border:1.5px solid var(--gold);
-  color:var(--gold);border-radius:3px;padding:13px 24px;
-  font-family:'Lora',serif;font-size:.85rem;font-style:italic;
-  z-index:999;transition:transform .28s ease,opacity .28s ease;
+  background:var(--navy);border:1.5px solid var(--gold);color:var(--gold);
+  border-radius:3px;padding:13px 24px;font-family:'Lora',serif;font-size:.85rem;
+  font-style:italic;z-index:999;transition:transform .28s ease,opacity .28s ease;
   opacity:0;pointer-events:none;white-space:nowrap;text-align:center;
   box-shadow:0 4px 24px rgba(0,0,0,.45);
 }
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
 h1{font-family:'Playfair Display',serif;font-size:2rem;color:var(--navy);text-align:center;line-height:1.25}
 h2{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--navy);margin-bottom:6px}
 h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--brown2)}
@@ -119,9 +109,8 @@ h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--brown2)}
 .tf-btn:disabled{cursor:default}
 .char-card{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
 .portrait{
-  width:76px;height:96px;border:2px solid var(--gold-dk);
-  background:var(--navy2);flex-shrink:0;display:flex;
-  align-items:center;justify-content:center;border-radius:2px;
+  width:76px;height:96px;border:2px solid var(--gold-dk);background:var(--navy2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:2px;
 }
 .portrait span{font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)}
 .char-meta{font-size:.75rem;color:var(--brown2);margin-bottom:7px}
@@ -192,6 +181,12 @@ h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--brown2)}
   letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .2s;
 }
 .btn-victory:hover{background:var(--gold);color:var(--navy)}
+.era-tag{
+  display:inline-block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 10px;border-radius:2px;margin-bottom:10px;font-family:'Lora',serif;
+}
+.era-tag.romantic{background:#2a1a3a;color:#c9a4e8;border:1px solid #6a3a9a}
+.era-tag.victorian{background:#1a2a1a;color:#7acc7a;border:1px solid #2d6a4f}
 </style>
 </head>
 <body>
@@ -203,6 +198,7 @@ h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--brown2)}
   <div class="progress-dot" id="dot-2"></div>
   <div class="progress-dot" id="dot-3"></div>
   <div class="progress-dot" id="dot-4"></div>
+  <div class="progress-dot" id="dot-5"></div>
 </div>
 
 <div class="chamber" id="chamber">
@@ -212,61 +208,51 @@ h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--brown2)}
 
 <script>
 const S = { room:0, score:0, total:0 };
-const ROOMS = [titleScreen, room1, room2, room3, room4, room5, victory];
+// 0=title, 1=romantic, 2=victorian, 3=austen, 4=elizabeth, 5=darcy, 6=bingley+final, 7=victory
+const ROOMS = [titleScreen, room1, room2, room3, room4, room5, room6, victory];
 let _timerID = null;
 
 function go(n) {
   if (n !== undefined) S.room = n;
-  const chamber = document.getElementById('chamber');
-  chamber.style.opacity = 0;
-  chamber.style.transition = 'opacity .2s';
+  const ch = document.getElementById('chamber');
+  ch.style.opacity = 0; ch.style.transition = 'opacity .2s';
   if (_timerID) { clearInterval(_timerID); _timerID = null; }
   setTimeout(() => {
     ROOMS[S.room]();
-    // Re-attach overlay after render
-    const existing = document.getElementById('lock-overlay');
-    if (!existing) {
-      const ov = document.createElement('div');
+    let ov = document.getElementById('lock-overlay');
+    if (!ov) {
+      ov = document.createElement('div');
       ov.id = 'lock-overlay'; ov.onclick = showToast;
-      chamber.appendChild(ov);
+      ch.appendChild(ov);
     }
-    chamber.style.opacity = 1;
-    for (let i = 0; i < 5; i++) {
+    ch.style.opacity = 1;
+    for (let i = 0; i < 6; i++)
       document.getElementById('dot-'+i).classList.toggle('done', S.room > i+1);
-    }
-    if (S.room >= 1 && S.room <= 5) startTimer(60);
+    if (S.room >= 1 && S.room <= 6) startTimer(60);
   }, 220);
 }
 
 function next() { S.room++; go(); }
 function el(id) { return document.getElementById(id); }
-
-function setFB(id, msg, type) {
-  const f = el(id); f.innerHTML = msg; f.className = 'feedback '+type;
-}
+function setFB(id, msg, type) { const f=el(id); f.innerHTML=msg; f.className='feedback '+type; }
 
 function markQ(selector, correctLetter, chosenLetter) {
   const L = ['a','b','c','d'];
   document.querySelectorAll(selector).forEach((btn,i) => {
     btn.disabled = true;
-    if (L[i] === correctLetter) btn.classList.add('correct');
-    else if (L[i] === chosenLetter) btn.classList.add('incorrect');
+    if (L[i]===correctLetter) btn.classList.add('correct');
+    else if (L[i]===chosenLetter) btn.classList.add('incorrect');
   });
 }
 
-/* TIMER */
 function startTimer(seconds) {
   const ov = el('lock-overlay');
   if (ov) ov.style.display = 'block';
-  const banner = el('timer-banner');
-  const countEl = el('timer-count');
-  const fillEl = el('timer-fill');
-  if (!banner || !countEl || !fillEl) return;
-
+  const banner=el('timer-banner'), countEl=el('timer-count'), fillEl=el('timer-fill');
+  if (!banner||!countEl||!fillEl) return;
   let remaining = seconds;
   countEl.textContent = remaining;
   fillEl.style.width = '100%';
-
   _timerID = setInterval(() => {
     remaining--;
     countEl.textContent = remaining;
@@ -286,8 +272,7 @@ function startTimer(seconds) {
 
 let _toastTimer = null;
 function showToast() {
-  const t = el('toast');
-  t.classList.add('show');
+  const t = el('toast'); t.classList.add('show');
   if (_toastTimer) clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
@@ -303,7 +288,9 @@ function timerHTML() {
   </div>`;
 }
 
-/* TITLE */
+/* =========================================================
+   TITLE
+   ========================================================= */
 function titleScreen() {
   el('chamber').innerHTML = `
     <div style="text-align:center">
@@ -313,84 +300,87 @@ function titleScreen() {
       <p class="title-intro">
         You have received an invitation to Netherfield Park for the season's grandest ball.
         Upon arrival, the great doors have been sealed by a riddle.<br><br>
-        To escape, you must prove your knowledge of Regency England,
+        To escape, you must prove your knowledge of the Romantic and Victorian eras,
         the brilliant Jane Austen, and three very particular guests
         expected this very evening.
       </p>
-      <div style="display:flex;gap:18px;justify-content:center;margin-bottom:22px;
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:22px;
                   font-size:.72rem;letter-spacing:2px;color:var(--gold-dk);text-transform:uppercase;flex-wrap:wrap">
-        <span>5 Chambers</span><span>|</span><span>Regency Era</span>
-        <span>|</span><span>Jane Austen</span><span>|</span><span>3 Characters</span>
+        <span>6 Chambers</span><span>|</span><span>Romantic Era</span>
+        <span>|</span><span>Victorian Era</span><span>|</span><span>Jane Austen</span><span>|</span><span>3 Characters</span>
       </div>
       <button class="btn-primary" onclick="next()">Enter Netherfield &rarr;</button>
     </div>`;
 }
 
-/* ROOM 1 */
+/* =========================================================
+   ROOM 1: THE ROMANTIC ERA
+   ========================================================= */
 function room1() {
   el('chamber').innerHTML = timerHTML() + `
-    <div class="chapter-label">Chamber I of V - The Library</div>
+    <div class="chapter-label">Chamber I of VI - The East Wing</div>
     <div class="lock-icon" id="lock1">&#128274;</div>
-    <h1>The Library</h1>
+    <span class="era-tag romantic">Romantic Era</span>
+    <h1>The East Wing</h1>
     <div class="divider"></div>
-    <h2>Regency England</h2>
-    <p class="flavor">The shelves hold the answers. Study carefully. This knowledge is your first key.</p>
+    <h2>The Romantic Era (1785 to 1850)</h2>
+    <p class="flavor">Dusty canvases line the walls. Poetry is pinned to every surface. Something here values feeling over logic.</p>
 
     <div class="fact-card">
-      <div class="fact-label">The Time Period</div>
-      <p>The <strong>Regency era</strong> (roughly 1811 to 1820) is named for the <strong>Prince Regent,</strong> the future King George IV, who ruled while his father King George III was declared unfit due to mental illness.</p>
+      <div class="fact-label">What Was the Romantic Era?</div>
+      <p>The Romantic era was a <strong>literary and artistic movement</strong> that swept through Europe, roughly from 1785 to 1850. It was a direct reaction against the cold logic of the Enlightenment. Romantics believed that <strong>emotion, imagination, and individual experience</strong> were more important than reason and science.</p>
     </div>
     <div class="fact-card">
-      <div class="fact-label">Women and Financial Security</div>
-      <p>Women had almost no legal independence. Once married, everything they owned, including money, property, and even clothing, legally belonged to their husband. For most women, a good marriage was not romantic. It was <em>survival.</em></p>
+      <div class="fact-label">Core Themes</div>
+      <p>Romantic writers returned again and again to a few powerful ideas: the beauty and power of <strong>nature,</strong> the importance of the <strong>individual self,</strong> the mystery of the <strong>supernatural,</strong> and a deep nostalgia for the past. They believed the world could be transformed through feeling and imagination.</p>
     </div>
     <div class="fact-card">
-      <div class="fact-label">Entailment and Inheritance</div>
-      <p>Many estates were <strong>"entailed,"</strong> meaning they were legally restricted so that they could only pass to male heirs. Daughters could be completely left out, even if they had lived their whole lives on that land. This concept is central to our story.</p>
+      <div class="fact-label">Key Figures You May Know</div>
+      <p>The Romantic era produced some of the most famous writers in English history. On the poetry side: <strong>William Wordsworth, Samuel Taylor Coleridge, Lord Byron, Percy Bysshe Shelley,</strong> and <strong>John Keats.</strong> In fiction: <strong>Mary Shelley</strong> wrote <em>Frankenstein</em> (1818), one of the most influential novels ever written.</p>
     </div>
     <div class="fact-card">
-      <div class="fact-label">Social Class and the Season</div>
-      <p>Society was rigidly divided by class. Each year, wealthy families traveled to London for <strong>"the Season,"</strong> a social calendar of balls, dinners, and visits specifically designed to introduce young women to eligible men of their rank.</p>
+      <div class="fact-label">Where Does Jane Austen Fit?</div>
+      <p>Jane Austen wrote during the Romantic era, but she is often set <em>apart</em> from it. While Romantic poets celebrated wild emotion and dramatic passion, Austen wrote with cool wit and social observation. She did not reject emotion, but she insisted on pairing it with <strong>good sense and clear judgment.</strong> In fact, one of her most famous novels is titled <em>Sense and Sensibility,</em> which captures that exact tension.</p>
     </div>
     <div class="fact-card">
-      <div class="fact-label">Old Money vs. New Money</div>
-      <p>There was a sharp distinction between those with <strong>old, inherited wealth</strong> (tied to land and title) and those who had recently made money through trade or business. The latter was often looked down upon, no matter how wealthy they were.</p>
+      <div class="fact-label">Romanticism and the Gothic</div>
+      <p>Romanticism also gave birth to <strong>Gothic literature,</strong> full of dark castles, mysterious strangers, and hidden secrets. You will notice echoes of this in the atmosphere of <em>Pride and Prejudice,</em> especially in the brooding presence of Mr. Darcy and the grand, shadowy estate of Pemberley.</p>
     </div>
 
     <div class="quiz-section">
       <h3 style="margin-bottom:14px">&#128273; Unlock the Chamber</h3>
       <div class="quiz-q" id="r1q1">
-        <p>1. In Regency England, what was typically a woman's best path to financial security?</p>
+        <p>1. The Romantic era was a reaction against which intellectual movement?</p>
         <div class="quiz-opts">
-          <button class="quiz-opt" onclick="r1ans(1,'a')">Becoming a teacher</button>
-          <button class="quiz-opt" onclick="r1ans(1,'b')">Making a good marriage</button>
-          <button class="quiz-opt" onclick="r1ans(1,'c')">Inheriting a title</button>
-          <button class="quiz-opt" onclick="r1ans(1,'d')">Starting a business</button>
+          <button class="quiz-opt" onclick="r1ans(1,'a')">The Renaissance</button>
+          <button class="quiz-opt" onclick="r1ans(1,'b')">The Enlightenment</button>
+          <button class="quiz-opt" onclick="r1ans(1,'c')">The Industrial Revolution</button>
+          <button class="quiz-opt" onclick="r1ans(1,'d')">The Reformation</button>
         </div>
       </div>
       <div class="quiz-q" id="r1q2">
-        <p>2. What does it mean for an estate to be "entailed"?</p>
+        <p>2. Which of the following was NOT a major theme of Romantic literature?</p>
         <div class="quiz-opts">
-          <button class="quiz-opt" onclick="r1ans(2,'a')">The house is very large</button>
-          <button class="quiz-opt" onclick="r1ans(2,'b')">It can only pass to a male heir</button>
-          <button class="quiz-opt" onclick="r1ans(2,'c')">It must be sold upon the owner's death</button>
-          <button class="quiz-opt" onclick="r1ans(2,'d')">It belongs to the Crown</button>
+          <button class="quiz-opt" onclick="r1ans(2,'a')">The power of nature</button>
+          <button class="quiz-opt" onclick="r1ans(2,'b')">Individual experience and emotion</button>
+          <button class="quiz-opt" onclick="r1ans(2,'c')">Scientific progress and industry</button>
+          <button class="quiz-opt" onclick="r1ans(2,'d')">The supernatural and the mysterious</button>
         </div>
       </div>
       <div class="quiz-q" id="r1q3">
-        <p>3. The "Regency era" is named after whom?</p>
+        <p>3. Mary Shelley, a Romantic-era author, wrote which famous novel?</p>
         <div class="quiz-opts">
-          <button class="quiz-opt" onclick="r1ans(3,'a')">Queen Victoria</button>
-          <button class="quiz-opt" onclick="r1ans(3,'b')">King George III</button>
-          <button class="quiz-opt" onclick="r1ans(3,'c')">The Prince Regent, future George IV</button>
-          <button class="quiz-opt" onclick="r1ans(3,'d')">Napoleon Bonaparte</button>
+          <button class="quiz-opt" onclick="r1ans(3,'a')">Dracula</button>
+          <button class="quiz-opt" onclick="r1ans(3,'b')">Wuthering Heights</button>
+          <button class="quiz-opt" onclick="r1ans(3,'c')">Frankenstein</button>
+          <button class="quiz-opt" onclick="r1ans(3,'d')">Jane Eyre</button>
         </div>
       </div>
       <div class="feedback" id="fb1"></div>
       <div class="prog-note">Correct: <span id="r1c">0</span> / 3</div>
       <button class="btn-primary hidden" id="next1" onclick="next()">Proceed to Chamber II &rarr;</button>
     </div>`;
-  window._r1 = {a:{1:'b',2:'b',3:'c'},done:0,correct:0};
+  window._r1 = {a:{1:'b',2:'c',3:'c'},done:0,correct:0};
 }
 
 function r1ans(q,chosen) {
@@ -398,20 +388,125 @@ function r1ans(q,chosen) {
   window._r1.done++;
   if (chosen===window._r1.a[q]){window._r1.correct++;S.score++;}
   S.total++;
-  el('r1c').textContent=window._r1.correct;
+  el('r1c').textContent = window._r1.correct;
   if (window._r1.done===3) {
-    const ok=window._r1.correct===3;
-    setFB('fb1',ok?'Excellent! The library door creaks open.':window._r1.correct+'/3 correct. The door opens. Review what you missed!',ok?'good':'bad');
-    el('lock1').textContent='🔓';el('lock1').classList.add('unlocking');
+    const ok = window._r1.correct===3;
+    setFB('fb1', ok?'Excellent! The east wing door creaks open.':window._r1.correct+'/3 correct. The door opens. Review what you missed!', ok?'good':'bad');
+    el('lock1').textContent='🔓'; el('lock1').classList.add('unlocking');
     el('next1').classList.remove('hidden');
   }
 }
 
-/* ROOM 2 */
+/* =========================================================
+   ROOM 2: THE VICTORIAN ERA
+   ========================================================= */
 function room2() {
   el('chamber').innerHTML = timerHTML() + `
-    <div class="chapter-label">Chamber II of V - Jane's Study</div>
+    <div class="chapter-label">Chamber II of VI - The Parlour</div>
     <div class="lock-icon" id="lock2">&#128274;</div>
+    <span class="era-tag victorian">Victorian Era</span>
+    <h1>The Parlour</h1>
+    <div class="divider"></div>
+    <h2>The Victorian Era (1837 to 1901)</h2>
+    <p class="flavor">The room is neat, proper, and serious. A portrait of a stern queen stares down from above the mantelpiece.</p>
+
+    <div class="fact-card">
+      <div class="fact-label">What Was the Victorian Era?</div>
+      <p>The Victorian era is named for <strong>Queen Victoria,</strong> who ruled Britain from 1837 to 1901. It was one of the most transformative periods in British history, defined by rapid <strong>industrialization, technological progress,</strong> and the expansion of the British Empire across the globe.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Class, Poverty, and Progress</div>
+      <p>The Industrial Revolution created enormous wealth, but also enormous suffering. Factories filled the cities with workers living in poverty while a wealthy upper class lived in grand comfort. Victorian writers, especially <strong>Charles Dickens,</strong> used fiction to expose these sharp inequalities and demand social reform.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Victorian Morality and Respectability</div>
+      <p>Victorian society placed enormous value on <strong>respectability, duty, and propriety.</strong> How you behaved in public, what you said, how you dressed, and who you associated with all carried tremendous social weight. Anything that violated these norms, including scandal, poverty, or improper romantic behavior, could destroy a family's reputation entirely.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Women in Victorian Society</div>
+      <p>Like the Romantic era before it, the Victorian era severely restricted women's independence. Women were expected to be <strong>domestic, obedient, and morally pure,</strong> a concept historians call "the Angel in the House." Careers and public life were largely closed to them. Marriage remained the primary path to security and social standing.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">The Victorian Novel</div>
+      <p>The novel became the dominant literary form of the Victorian era. Authors like <strong>Charles Dickens, George Eliot, Thomas Hardy,</strong> and the <strong>Bronte sisters</strong> produced sweeping, detailed stories about society, class, love, and morality. Many were published as <strong>serialized installments</strong> in magazines, meaning readers had to wait each month for the next chapter, much like a TV series today.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Austen's Legacy in the Victorian Era</div>
+      <p>Jane Austen died in 1817, before the Victorian era began, but her novels were widely read and admired throughout it. Victorian readers recognized in her work the same concerns they lived with every day: the pressure of marriage, the weight of class, and the challenge of being a woman with intelligence in a society that did not always know what to do with her.</p>
+    </div>
+
+    <div class="quiz-section">
+      <h3 style="margin-bottom:8px">&#128273; True or False?</h3>
+      <p class="flavor" style="margin-bottom:14px">Click TRUE or FALSE for each statement about the Victorian era.</p>
+      <div class="tf-row" id="tf1">
+        <p>The Victorian era is named after Queen Victoria, who ruled from 1837 to 1901.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(1,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(1,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf2">
+        <p>Victorian society placed very little importance on reputation or public behavior.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(2,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(2,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf3">
+        <p>Many Victorian novels were first published in monthly magazine installments.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(3,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(3,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf4">
+        <p>Women in the Victorian era had full legal and professional equality with men.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(4,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(4,false)">False</button>
+        </div>
+      </div>
+      <div class="tf-row" id="tf5">
+        <p>Charles Dickens was a famous Victorian author known for writing about social inequality.</p>
+        <div class="tf-btns">
+          <button class="tf-btn" onclick="r2tf(5,true)">True</button>
+          <button class="tf-btn" onclick="r2tf(5,false)">False</button>
+        </div>
+      </div>
+      <div class="feedback" id="fb2"></div>
+      <div class="prog-note">Correct: <span id="r2c">0</span> / 5</div>
+      <button class="btn-primary hidden" id="next2" onclick="next()">Proceed to Chamber III &rarr;</button>
+    </div>`;
+  window._r2 = {a:{1:true,2:false,3:true,4:false,5:true},done:0,correct:0};
+}
+
+function r2tf(q,chosen) {
+  const correct = window._r2.a[q];
+  document.querySelectorAll('#tf'+q+' .tf-btn').forEach(btn => {
+    btn.disabled = true;
+    const isT = btn.textContent==='True';
+    if ((isT&&correct===true)||(!isT&&correct===false)) btn.classList.add('correct');
+    else if ((isT&&chosen===true&&!correct)||(!isT&&chosen===false&&correct)) btn.classList.add('incorrect');
+  });
+  window._r2.done++;
+  if (chosen===correct){window._r2.correct++;S.score++;}
+  S.total++;
+  el('r2c').textContent = window._r2.correct;
+  if (window._r2.done===5) {
+    const ok = window._r2.correct>=4;
+    setFB('fb2', ok?'Well done! The parlour door swings open.':window._r2.correct+'/5 correct. The door opens. Review the answers before moving on.', ok?'good':'bad');
+    el('lock2').textContent='🔓'; el('lock2').classList.add('unlocking');
+    el('next2').classList.remove('hidden');
+  }
+}
+
+/* =========================================================
+   ROOM 3: JANE AUSTEN
+   ========================================================= */
+function room3() {
+  el('chamber').innerHTML = timerHTML() + `
+    <div class="chapter-label">Chamber III of VI - Jane's Study</div>
+    <div class="lock-icon" id="lock3">&#128274;</div>
     <h1>Jane's Study</h1>
     <div class="divider"></div>
     <h2>Meet Jane Austen</h2>
@@ -422,7 +517,7 @@ function room2() {
       <div>
         <h2>Jane Austen</h2>
         <p class="char-meta">1775 to 1817 &nbsp;|&nbsp; Author &nbsp;|&nbsp; Hampshire, England</p>
-        <p class="char-desc">One of England's greatest novelists, Austen wrote sharp, witty stories about the world she knew: Regency society, marriage, and the quiet heroism of ordinary women.</p>
+        <p class="char-desc">One of England's greatest novelists, Austen wrote sharp, witty stories about the world she knew: society, marriage, and the quiet heroism of ordinary women.</p>
       </div>
     </div>
 
@@ -439,73 +534,71 @@ function room2() {
       <p><em>Pride and Prejudice</em> was first written in 1796 under the title <strong>"First Impressions,"</strong> a name that makes a great deal of sense once you have read the novel.</p>
     </div>
     <div class="fact-card">
+      <div class="fact-label">Austen and the Romantic Era</div>
+      <p>Austen was a contemporary of the Romantic poets, but her style was quite different. Where the Romantics celebrated wild passion and dramatic feeling, Austen preferred <strong>irony, restraint, and social observation.</strong> She believed good judgment mattered just as much as good feeling, which is exactly what <em>Pride and Prejudice</em> is about.</p>
+    </div>
+    <div class="fact-card">
       <div class="fact-label">A Short Life, A Lasting Legacy</div>
-      <p>Austen died in 1817 at just <strong>41 years old,</strong> leaving two novels unfinished. During her lifetime she was moderately well known. Today she is considered one of the greatest English writers who ever lived.</p>
+      <p>Austen died in 1817 at just <strong>41 years old,</strong> leaving two novels unfinished. During her lifetime she was moderately well known. Today she is considered one of the greatest English writers who ever lived, and her work was deeply admired throughout the Victorian era that followed.</p>
     </div>
 
     <div class="quiz-section">
-      <h3 style="margin-bottom:8px">&#128273; True or False?</h3>
-      <p class="flavor" style="margin-bottom:14px">Click TRUE or FALSE for each statement about Jane Austen.</p>
-      <div class="tf-row" id="tf1">
-        <p>Jane Austen published her novels under her real name.</p>
-        <div class="tf-btns">
-          <button class="tf-btn" onclick="r2tf(1,true)">True</button>
-          <button class="tf-btn" onclick="r2tf(1,false)">False</button>
+      <h3 style="margin-bottom:10px">&#128273; Unlock the Chamber</h3>
+      <div class="quiz-q" id="r3q1">
+        <p>1. How did Jane Austen publish her novels?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="r3ans(1,'a')">Under her full name</button>
+          <button class="quiz-opt" onclick="r3ans(1,'b')">Anonymously, as "By a Lady"</button>
+          <button class="quiz-opt" onclick="r3ans(1,'c')">Under a male pen name</button>
+          <button class="quiz-opt" onclick="r3ans(1,'d')">She never published in her lifetime</button>
         </div>
       </div>
-      <div class="tf-row" id="tf2">
-        <p>Pride and Prejudice was originally titled "First Impressions."</p>
-        <div class="tf-btns">
-          <button class="tf-btn" onclick="r2tf(2,true)">True</button>
-          <button class="tf-btn" onclick="r2tf(2,false)">False</button>
+      <div class="quiz-q" id="r3q2">
+        <p>2. What was Pride and Prejudice originally titled?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="r3ans(2,'a')">Second Chances</button>
+          <button class="quiz-opt" onclick="r3ans(2,'b')">Love and Society</button>
+          <button class="quiz-opt" onclick="r3ans(2,'c')">First Impressions</button>
+          <button class="quiz-opt" onclick="r3ans(2,'d')">Sense and Feeling</button>
         </div>
       </div>
-      <div class="tf-row" id="tf3">
-        <p>Jane Austen had only two siblings.</p>
-        <div class="tf-btns">
-          <button class="tf-btn" onclick="r2tf(3,true)">True</button>
-          <button class="tf-btn" onclick="r2tf(3,false)">False</button>
+      <div class="quiz-q" id="r3q3">
+        <p>3. How was Austen's writing style different from the Romantic poets of her time?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="r3ans(3,'a')">She wrote about nature and the supernatural</button>
+          <button class="quiz-opt" onclick="r3ans(3,'b')">She used irony and social observation rather than wild emotion</button>
+          <button class="quiz-opt" onclick="r3ans(3,'c')">She wrote only poetry, not fiction</button>
+          <button class="quiz-opt" onclick="r3ans(3,'d')">She celebrated individual rebellion above all else</button>
         </div>
       </div>
-      <div class="tf-row" id="tf4">
-        <p>Austen died relatively young, in her early forties.</p>
-        <div class="tf-btns">
-          <button class="tf-btn" onclick="r2tf(4,true)">True</button>
-          <button class="tf-btn" onclick="r2tf(4,false)">False</button>
-        </div>
-      </div>
-      <div class="feedback" id="fb2"></div>
-      <div class="prog-note">Correct: <span id="r2c">0</span> / 4</div>
-      <button class="btn-primary hidden" id="next2" onclick="next()">Proceed to Chamber III &rarr;</button>
+      <div class="feedback" id="fb3"></div>
+      <div class="prog-note">Correct: <span id="r3c">0</span> / 3</div>
+      <button class="btn-primary hidden" id="next3" onclick="next()">Proceed to Chamber IV &rarr;</button>
     </div>`;
-  window._r2 = {a:{1:false,2:true,3:false,4:true},done:0,correct:0};
+  window._r3 = {a:{1:'b',2:'c',3:'b'},done:0,correct:0};
 }
 
-function r2tf(q,chosen) {
-  const correct=window._r2.a[q];
-  document.querySelectorAll('#tf'+q+' .tf-btn').forEach(btn => {
-    btn.disabled=true;
-    const isT=btn.textContent==='True';
-    if ((isT&&correct===true)||(!isT&&correct===false)) btn.classList.add('correct');
-    else if ((isT&&chosen===true&&!correct)||(!isT&&chosen===false&&correct)) btn.classList.add('incorrect');
-  });
-  window._r2.done++;
-  if (chosen===correct){window._r2.correct++;S.score++;}
+function r3ans(q,chosen) {
+  markQ('#r3q'+q+' .quiz-opt', window._r3.a[q], chosen);
+  window._r3.done++;
+  if (chosen===window._r3.a[q]){window._r3.correct++;S.score++;}
   S.total++;
-  el('r2c').textContent=window._r2.correct;
-  if (window._r2.done===4) {
-    const ok=window._r2.correct>=3;
-    setFB('fb2',ok?'Well done! The study door swings open.':window._r2.correct+'/4 correct. The door opens. Review the answers before moving on.',ok?'good':'bad');
-    el('lock2').textContent='🔓';el('lock2').classList.add('unlocking');
-    el('next2').classList.remove('hidden');
+  el('r3c').textContent = window._r3.correct;
+  if (window._r3.done===3) {
+    const ok = window._r3.correct===3;
+    setFB('fb3', ok?'Well done! The study door swings open.':window._r3.correct+'/3 correct. The door opens. Review the answers!', ok?'good':'bad');
+    el('lock3').textContent='🔓'; el('lock3').classList.add('unlocking');
+    el('next3').classList.remove('hidden');
   }
 }
 
-/* ROOM 3 */
-function room3() {
+/* =========================================================
+   ROOM 4: ELIZABETH BENNET
+   ========================================================= */
+function room4() {
   el('chamber').innerHTML = timerHTML() + `
-    <div class="chapter-label">Chamber III of V - The Drawing Room</div>
-    <div class="lock-icon" id="lock3">&#128274;</div>
+    <div class="chapter-label">Chamber IV of VI - The Drawing Room</div>
+    <div class="lock-icon" id="lock4">&#128274;</div>
     <h1>The Drawing Room</h1>
     <div class="divider"></div>
     <h2>Meet: Miss Elizabeth Bennet</h2>
@@ -516,7 +609,7 @@ function room3() {
       <div>
         <h2>Elizabeth "Lizzy" Bennet</h2>
         <p class="char-meta">Second daughter of Mr. and Mrs. Bennet &nbsp;|&nbsp; Longbourn Estate</p>
-        <p class="char-desc">One of five sisters, Elizabeth is the kind of woman Regency society was not quite sure what to do with. She refuses to follow the rules, politely, brilliantly, and with a smile.</p>
+        <p class="char-desc">One of five sisters, Elizabeth is the kind of woman her society was not quite sure what to do with. She refuses to follow the rules, politely, brilliantly, and with a smile.</p>
       </div>
     </div>
 
@@ -526,7 +619,11 @@ function room3() {
     </div>
     <div class="fact-card">
       <div class="fact-label">What She Values</div>
-      <p>Unlike most women of her time, Elizabeth judges people by their <strong>character,</strong> not their wealth or social rank. She refuses to marry simply for money, which is a bold and radical position in Regency England.</p>
+      <p>Unlike most women of her time, Elizabeth judges people by their <strong>character,</strong> not their wealth or social rank. She refuses to marry simply for money, which is a bold and radical position in a society where marriage was survival.</p>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">A Romantic Hero in Her Own Way</div>
+      <p>In the tradition of the Romantic era, Elizabeth values <strong>authentic feeling and individual judgment</strong> over the rules of society. She is not swept away by wild passion like a Romantic hero might be, but she insists on choosing for herself, which was its own form of quiet revolution.</p>
     </div>
     <div class="fact-card">
       <div class="fact-label">Her World and Her People</div>
@@ -548,45 +645,48 @@ function room3() {
       </div>
       <p style="font-size:.78rem;text-align:center;color:var(--brown2)">Selected: <span id="tcount">0</span> / 4</p>
       <button class="btn-primary btn-inline" id="check-traits" onclick="checkTraits()">Check My Answer</button>
-      <div class="feedback" id="fb3"></div>
-      <button class="btn-primary hidden" id="next3" onclick="next()">Proceed to Chamber IV &rarr;</button>
+      <div class="feedback" id="fb4"></div>
+      <button class="btn-primary hidden" id="next4" onclick="next()">Proceed to Chamber V &rarr;</button>
     </div>`;
-  window._r3 = {correct:new Set(['witty','independent','observant','clever']),selected:new Set()};
+  window._r4 = {correct:new Set(['witty','independent','observant','clever']),selected:new Set()};
 }
 
 function toggleTrait(btn) {
   if (btn.disabled) return;
-  const t=btn.dataset.trait;
-  if (window._r3.selected.has(t)){window._r3.selected.delete(t);btn.classList.remove('selected');}
+  const t = btn.dataset.trait;
+  if (window._r4.selected.has(t)){window._r4.selected.delete(t);btn.classList.remove('selected');}
   else {
-    if (window._r3.selected.size>=4) return;
-    window._r3.selected.add(t);btn.classList.add('selected');
+    if (window._r4.selected.size>=4) return;
+    window._r4.selected.add(t); btn.classList.add('selected');
   }
-  el('tcount').textContent=window._r3.selected.size;
+  el('tcount').textContent = window._r4.selected.size;
 }
 
 function checkTraits() {
-  if (window._r3.selected.size<4){setFB('fb3','Please select exactly 4 traits first.','bad');return;}
-  let numRight=0;
+  if (window._r4.selected.size<4){setFB('fb4','Please select exactly 4 traits first.','bad');return;}
+  let numRight = 0;
   document.querySelectorAll('.trait-btn').forEach(btn => {
-    btn.disabled=true;btn.classList.remove('selected');
-    const t=btn.dataset.trait;
-    if (window._r3.correct.has(t)){btn.classList.add('correct-r');if(window._r3.selected.has(t))numRight++;}
-    else if (window._r3.selected.has(t)) btn.classList.add('wrong-r');
+    btn.disabled=true; btn.classList.remove('selected');
+    const t = btn.dataset.trait;
+    if (window._r4.correct.has(t)){btn.classList.add('correct-r');if(window._r4.selected.has(t))numRight++;}
+    else if (window._r4.selected.has(t)) btn.classList.add('wrong-r');
   });
   el('check-traits').disabled=true;
-  const ok=numRight===4;
-  if(ok)S.score++;S.total++;
-  setFB('fb3',ok?'Perfect! You understand Miss Bennet well. The door unlocks.':numRight+'/4 correct. The correct words are highlighted in green. The door opens!',ok?'good':'bad');
-  el('lock3').textContent='🔓';el('lock3').classList.add('unlocking');
-  el('next3').classList.remove('hidden');
+  const ok = numRight===4;
+  if(ok) S.score++;
+  S.total++;
+  setFB('fb4', ok?'Perfect! You understand Miss Bennet well. The door unlocks.':numRight+'/4 correct. The correct words are highlighted in green. The door opens!', ok?'good':'bad');
+  el('lock4').textContent='🔓'; el('lock4').classList.add('unlocking');
+  el('next4').classList.remove('hidden');
 }
 
-/* ROOM 4 */
-function room4() {
+/* =========================================================
+   ROOM 5: MR. DARCY
+   ========================================================= */
+function room5() {
   el('chamber').innerHTML = timerHTML() + `
-    <div class="chapter-label">Chamber IV of V - The Garden</div>
-    <div class="lock-icon" id="lock4">&#128274;</div>
+    <div class="chapter-label">Chamber V of VI - The Garden</div>
+    <div class="lock-icon" id="lock5">&#128274;</div>
     <h1>The Garden Path</h1>
     <div class="divider"></div>
     <h2>Meet: Mr. Fitzwilliam Darcy</h2>
@@ -610,6 +710,10 @@ function room4() {
       <p>He is the master of <strong>Pemberley,</strong> a grand, magnificent estate in Derbyshire. To own Pemberley is to be among the most powerful landowners in England. The estate is both his home and his identity.</p>
     </div>
     <div class="fact-card">
+      <div class="fact-label">A Gothic Figure</div>
+      <p>Students of the Romantic era will notice that Darcy resembles the <strong>Gothic hero</strong> that appears throughout Romantic literature: brooding, solitary, misunderstood, and hiding depths that only a perceptive observer can uncover. He is not a villain, but he is built like one at first glance.</p>
+    </div>
+    <div class="fact-card">
       <div class="fact-label">Beneath the Surface</div>
       <p>Beneath the cold exterior, Darcy is fiercely <strong>loyal to those he loves.</strong> He is deeply protective of his younger sister Georgiana and is quietly capable of great generosity, though he rarely shows it in a crowded room.</p>
     </div>
@@ -630,35 +734,37 @@ function room4() {
         <br>
         <button class="btn-primary btn-inline" onclick="checkUnscramble()" style="display:inline-block">Submit Answer</button>
       </div>
-      <div class="feedback" id="fb4"></div>
-      <button class="btn-primary hidden" id="next4" onclick="next()">Proceed to Chamber V &rarr;</button>
+      <div class="feedback" id="fb5"></div>
+      <button class="btn-primary hidden" id="next5" onclick="next()">Proceed to Chamber VI &rarr;</button>
     </div>`;
-  window._r4 = {attempts:0};
+  window._r5 = {attempts:0};
 }
 
 function checkUnscramble() {
-  const val=el('u-input').value.trim().toUpperCase();
-  window._r4.attempts++;
+  const val = el('u-input').value.trim().toUpperCase();
+  window._r5.attempts++;
   if (val==='PEMBERLEY') {
-    S.score++;S.total++;
-    setFB('fb4','Correct! Pemberley, the grandest estate in Derbyshire. The garden gate swings open.','good');
-    el('lock4').textContent='🔓';el('lock4').classList.add('unlocking');
-    el('u-input').disabled=true;el('next4').classList.remove('hidden');
-  } else if (window._r4.attempts>=3) {
+    S.score++; S.total++;
+    setFB('fb5','Correct! Pemberley, the grandest estate in Derbyshire. The garden gate swings open.','good');
+    el('lock5').textContent='🔓'; el('lock5').classList.add('unlocking');
+    el('u-input').disabled=true; el('next5').classList.remove('hidden');
+  } else if (window._r5.attempts>=3) {
     S.total++;
-    setFB('fb4','The answer is PEMBERLEY. The gate opens anyway. Remember that name!','bad');
-    el('lock4').textContent='🔓';el('u-input').disabled=true;el('next4').classList.remove('hidden');
+    setFB('fb5','The answer is PEMBERLEY. The gate opens anyway. Remember that name!','bad');
+    el('lock5').textContent='🔓'; el('u-input').disabled=true; el('next5').classList.remove('hidden');
   } else {
     const hints=['','Hint: it starts with P.','Hint: P _ M B _ R _ _ Y'];
-    setFB('fb4','Not quite. '+hints[window._r4.attempts],'bad');
+    setFB('fb5','Not quite. '+hints[window._r5.attempts],'bad');
   }
 }
 
-/* ROOM 5 */
-function room5() {
+/* =========================================================
+   ROOM 6: MR. BINGLEY + FINAL QUIZ
+   ========================================================= */
+function room6() {
   el('chamber').innerHTML = timerHTML() + `
-    <div class="chapter-label">Chamber V of V - The Grand Ballroom - Final Chamber</div>
-    <div class="lock-icon" id="lock5">&#128274;</div>
+    <div class="chapter-label">Chamber VI of VI - The Grand Ballroom - Final Chamber</div>
+    <div class="lock-icon" id="lock6">&#128274;</div>
     <h1>The Grand Ballroom</h1>
     <div class="divider"></div>
     <h2>Meet: Mr. Charles Bingley</h2>
@@ -675,15 +781,15 @@ function room5() {
 
     <div class="fact-card">
       <div class="fact-label">His Personality</div>
-      <p>Bingley is <strong>cheerful, warm, and immediately likeable.</strong> He enters a room and makes everyone feel welcome. He dances every dance at every ball, the social opposite of Darcy.</p>
+      <p>Bingley is <strong>cheerful, warm, and immediately likeable.</strong> He enters a room and makes everyone feel welcome. He dances every dance at every ball, the social opposite of the brooding Darcy.</p>
     </div>
     <div class="fact-card">
       <div class="fact-label">New Money</div>
-      <p>Unlike Darcy's old, inherited wealth, Bingley's fortune comes from <strong>trade and business,</strong> which is called "new money." In Regency society, how you got your wealth was nearly as important as having it.</p>
+      <p>Unlike Darcy's old, inherited wealth, Bingley's fortune comes from <strong>trade and business,</strong> what Victorians would call "new money." Both in Austen's time and in the Victorian era that followed, how you earned your wealth was nearly as important as having it.</p>
     </div>
     <div class="fact-card">
       <div class="fact-label">His Arrival at Netherfield</div>
-      <p>He has just taken the lease on <strong>Netherfield Park,</strong> the very house you are standing in right now. His arrival as a wealthy, cheerful, single man sets the entire story into motion.</p>
+      <p>He has just taken the lease on <strong>Netherfield Park,</strong> the very house you are standing in right now. His arrival as a wealthy, cheerful, single man is the event that sets the entire story into motion.</p>
     </div>
     <div class="fact-card">
       <div class="fact-label">His Company</div>
@@ -692,56 +798,69 @@ function room5() {
 
     <div class="quiz-section">
       <h3 style="margin-bottom:10px">&#128273; Final Challenge - Escape the Estate!</h3>
-      <p class="flavor" style="margin-bottom:14px">Three questions draw on everything you have learned tonight. Answer well to unlock the great doors of Netherfield.</p>
+      <p class="flavor" style="margin-bottom:14px">Four questions draw on everything you have learned across all six chambers. Answer well to unlock the great doors of Netherfield.</p>
+
       <div class="quiz-q" id="fq1">
-        <p>1. What is the name of Mr. Darcy's estate?</p>
+        <p>1. The Romantic era was largely a reaction against which movement?</p>
         <div class="quiz-opts">
-          <button class="quiz-opt" onclick="finalQ(1,'a')">Longbourn</button>
-          <button class="quiz-opt" onclick="finalQ(1,'b')">Netherfield Park</button>
-          <button class="quiz-opt" onclick="finalQ(1,'c')">Pemberley</button>
-          <button class="quiz-opt" onclick="finalQ(1,'d')">Rosings Park</button>
+          <button class="quiz-opt" onclick="finalQ(1,'a')">Gothic literature</button>
+          <button class="quiz-opt" onclick="finalQ(1,'b')">The Enlightenment</button>
+          <button class="quiz-opt" onclick="finalQ(1,'c')">The Victorian novel</button>
+          <button class="quiz-opt" onclick="finalQ(1,'d')">The Industrial Revolution</button>
         </div>
       </div>
       <div class="quiz-q" id="fq2">
-        <p>2. What was "Pride and Prejudice" originally titled when Austen first wrote it?</p>
+        <p>2. Which statement best describes Victorian society's attitude toward women?</p>
         <div class="quiz-opts">
-          <button class="quiz-opt" onclick="finalQ(2,'a')">Second Chances</button>
-          <button class="quiz-opt" onclick="finalQ(2,'b')">First Impressions</button>
-          <button class="quiz-opt" onclick="finalQ(2,'c')">Love and Society</button>
-          <button class="quiz-opt" onclick="finalQ(2,'d')">The Marriage Plot</button>
+          <button class="quiz-opt" onclick="finalQ(2,'a')">Women were encouraged to pursue professional careers</button>
+          <button class="quiz-opt" onclick="finalQ(2,'b')">Women had full legal equality with men</button>
+          <button class="quiz-opt" onclick="finalQ(2,'c')">Women were expected to be domestic and were largely dependent on marriage for security</button>
+          <button class="quiz-opt" onclick="finalQ(2,'d')">Women's social roles varied widely depending on their personal choice</button>
         </div>
       </div>
       <div class="quiz-q" id="fq3">
-        <p>3. Which of the following best describes Elizabeth Bennet?</p>
+        <p>3. What is the name of Mr. Darcy's estate?</p>
         <div class="quiz-opts">
-          <button class="quiz-opt" onclick="finalQ(3,'a')">Wealthy and fashionable</button>
-          <button class="quiz-opt" onclick="finalQ(3,'b')">Obedient and quietly content</button>
-          <button class="quiz-opt" onclick="finalQ(3,'c')">Witty, independent, and clever</button>
-          <button class="quiz-opt" onclick="finalQ(3,'d')">Proud and socially superior</button>
+          <button class="quiz-opt" onclick="finalQ(3,'a')">Longbourn</button>
+          <button class="quiz-opt" onclick="finalQ(3,'b')">Netherfield Park</button>
+          <button class="quiz-opt" onclick="finalQ(3,'c')">Rosings Park</button>
+          <button class="quiz-opt" onclick="finalQ(3,'d')">Pemberley</button>
         </div>
       </div>
-      <div class="feedback" id="fb5"></div>
-      <div class="prog-note">Correct: <span id="r5c">0</span> / 3</div>
-      <button class="btn-primary hidden" id="next5" onclick="next()">&#127882; Escape Netherfield! &rarr;</button>
+      <div class="quiz-q" id="fq4">
+        <p>4. Which of the following best describes Elizabeth Bennet?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" onclick="finalQ(4,'a')">Wealthy and fashionable</button>
+          <button class="quiz-opt" onclick="finalQ(4,'b')">Obedient and quietly content</button>
+          <button class="quiz-opt" onclick="finalQ(4,'c')">Witty, independent, and clever</button>
+          <button class="quiz-opt" onclick="finalQ(4,'d')">Proud and socially superior</button>
+        </div>
+      </div>
+
+      <div class="feedback" id="fb6"></div>
+      <div class="prog-note">Correct: <span id="r6c">0</span> / 4</div>
+      <button class="btn-primary hidden" id="next6" onclick="next()">&#127882; Escape Netherfield! &rarr;</button>
     </div>`;
-  window._r5 = {a:{1:'c',2:'b',3:'c'},done:0,correct:0};
+  window._r6 = {a:{1:'b',2:'c',3:'d',4:'c'},done:0,correct:0};
 }
 
 function finalQ(q,chosen) {
-  markQ('#fq'+q+' .quiz-opt',window._r5.a[q],chosen);
-  window._r5.done++;
-  if (chosen===window._r5.a[q]){window._r5.correct++;S.score++;}
+  markQ('#fq'+q+' .quiz-opt', window._r6.a[q], chosen);
+  window._r6.done++;
+  if (chosen===window._r6.a[q]){window._r6.correct++;S.score++;}
   S.total++;
-  el('r5c').textContent=window._r5.correct;
-  if (window._r5.done===3) {
-    const ok=window._r5.correct===3;
-    setFB('fb5',ok?'&#127881; Perfect score! The great doors of Netherfield swing wide open!':window._r5.correct+'/3 correct. The doors open. Review the answers before we start reading next week!',ok?'good':'bad');
-    el('lock5').textContent='🔓';el('lock5').classList.add('unlocking');
-    el('next5').classList.remove('hidden');
+  el('r6c').textContent = window._r6.correct;
+  if (window._r6.done===4) {
+    const ok = window._r6.correct===4;
+    setFB('fb6', ok?'&#127881; Perfect score! The great doors of Netherfield swing wide open!':window._r6.correct+'/4 correct. The doors open. Review the answers before we start reading next week!', ok?'good':'bad');
+    el('lock6').textContent='🔓'; el('lock6').classList.add('unlocking');
+    el('next6').classList.remove('hidden');
   }
 }
 
-/* VICTORY */
+/* =========================================================
+   VICTORY
+   ========================================================= */
 function victory() {
   const pct = S.total>0 ? Math.round((S.score/S.total)*100) : 0;
   const grade = pct>=90?'With Distinction &#127775;':pct>=70?'With Honours &#10024;':'Escaped - Barely! &#128005;';
@@ -763,10 +882,11 @@ function victory() {
 
       <div style="text-align:left;margin:20px 0">
         <h3 style="margin-bottom:14px;text-align:left">What you have learned:</h3>
-        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Regency England</strong> - when Pride and Prejudice takes place, why marriage was survival, and what "entailment" means for the Bennet family.</span></div>
-        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Jane Austen</strong> - who she was, why she published as "a Lady," and why this book was almost called First Impressions.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>The Romantic Era</strong> - a literary movement valuing emotion, imagination, and the individual over cold reason. Austen wrote during this era, but with her own distinct voice.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>The Victorian Era</strong> - the reign of Queen Victoria, defined by industry, rigid social rules, and a society where reputation and marriage shaped nearly every life.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Jane Austen</strong> - who she was, why she published anonymously, and why this book was almost called First Impressions.</span></div>
         <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Elizabeth Bennet</strong> - witty, clever, independent, and not easily impressed by wealth or rank.</span></div>
-        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Mr. Darcy</strong> - master of Pemberley, proud in manner, but a man whose first impression may not tell the whole story.</span></div>
+        <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Mr. Darcy</strong> - master of Pemberley, brooding like a Romantic Gothic hero, but a man whose first impression may not tell the whole story.</span></div>
         <div class="recap-item"><span class="recap-check">&#10003;</span><span><strong>Mr. Bingley</strong> - warm, cheerful, newly arrived at Netherfield, and about to cause quite a stir in the neighbourhood.</span></div>
       </div>
 
@@ -788,17 +908,16 @@ function victory() {
       <button class="btn-victory" onclick="saveScreenshot()">&#128247; Save Screenshot</button>
     </div>
     <div class="feedback" id="fb-victory" style="margin:6px 0 16px"></div>
-
     <button class="btn-primary" onclick="S.room=0;S.score=0;S.total=0;go()">Play Again</button>`;
 
-  for (let i=0;i<5;i++) el('dot-'+i).classList.add('done');
+  for (let i=0;i<6;i++) el('dot-'+i).classList.add('done');
 }
 
 function copyResults() {
-  const pct=S.total>0?Math.round((S.score/S.total)*100):0;
-  const grade=pct>=90?'With Distinction':pct>=70?'With Honours':'Escaped - Barely!';
-  const dateStr=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const text=[
+  const pct = S.total>0?Math.round((S.score/S.total)*100):0;
+  const grade = pct>=90?'With Distinction':pct>=70?'With Honours':'Escaped - Barely!';
+  const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const text = [
     '========================================',
     '  Escape from Netherfield',
     '  A Jane Austen Pre-Reading Escape Room',
@@ -811,16 +930,16 @@ function copyResults() {
     'Date        : '+dateStr,
     '',
     'Chambers Completed:',
-    '  [x] Chamber I   - Regency England',
-    '  [x] Chamber II  - Jane Austen',
-    '  [x] Chamber III - Elizabeth Bennet',
-    '  [x] Chamber IV  - Mr. Darcy',
-    '  [x] Chamber V   - Mr. Bingley',
+    '  [x] Chamber I   - The Romantic Era',
+    '  [x] Chamber II  - The Victorian Era',
+    '  [x] Chamber III - Jane Austen',
+    '  [x] Chamber IV  - Elizabeth Bennet',
+    '  [x] Chamber V   - Mr. Darcy',
+    '  [x] Chamber VI  - Mr. Bingley',
     '',
     'Pre-reading activity for Pride and Prejudice.',
     '========================================'
   ].join('\n');
-
   navigator.clipboard.writeText(text).then(()=>{
     setFB('fb-victory','Results copied! Paste into a document, fill in your name, and submit for extra credit.','good');
   }).catch(()=>{
@@ -830,14 +949,13 @@ function copyResults() {
 
 function saveScreenshot() {
   setFB('fb-victory','Capturing your scorecard, please wait...','good');
-  const target = el('scorecard');
-  html2canvas(target,{
+  html2canvas(el('scorecard'),{
     backgroundColor:'#f5eee1',scale:2,useCORS:true,logging:false,
-    ignoreElements: el => el.id==='lock-overlay'
+    ignoreElements: e => e.id==='lock-overlay'
   }).then(canvas=>{
-    const link=document.createElement('a');
-    link.download='netherfield_escape_room_score.png';
-    link.href=canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.download = 'netherfield_escape_room_score.png';
+    link.href = canvas.toDataURL('image/png');
     link.click();
     setFB('fb-victory','Screenshot saved! Write your name on it and submit for extra credit.','good');
   }).catch(()=>{
